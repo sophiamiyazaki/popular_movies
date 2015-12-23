@@ -83,4 +83,11 @@ public class MoviePosterAdapter extends BaseAdapter {
     public void add(Movie movie) {
         this.add(movie);
     }
+
+    public void setData(List<Movie> data) {
+        clear();
+        for (Movie movie : data) {
+            add(movie);
+        }
+    }
 }

@@ -32,6 +32,7 @@ import java.util.List;
 public class MainMovieFragment extends Fragment {
 
     private MoviePosterAdapter mMovieAdapter;
+    private ArrayList<Movie> mMovies = null;
 
     public MainMovieFragment() {
     }
@@ -190,14 +191,11 @@ public class MainMovieFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Movie> movies) {
             if (movies != null) {
-                try { // I get a Runtime Error here. why??
-                    mMovieAdapter.clear();
-                    for(Movie movie : movies) {
-                        mMovieAdapter.add(movie);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (mMovieAdapter != null) {
+                    mMovieAdapter.setData(movies); // I get a Runtime OutOfMemoryError here. why?
                 }
+                mMovies = new ArrayList<>();
+                mMovies.addAll(movies);
             }
         }
     }
