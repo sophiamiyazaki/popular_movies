@@ -24,17 +24,23 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainMovieFragment extends Fragment {
 
-    private MoviePosterAdapter mMovieAdapter;
-    private ArrayList<Movie> mMovies = null;
+    public MoviePosterAdapter mMovieAdapter;
+    public ArrayList<Movie> mMoviesArrayList;
 
     public MainMovieFragment() {
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FetchMoviesTask moviesTask = new FetchMoviesTask();
+        moviesTask.execute("popularity.desc");
     }
 
     @Override
@@ -65,6 +71,7 @@ public class MainMovieFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        GridView moviePosterGrid = (GridView) rootView.findViewById(R.id.movie_poster_gridview);
 
 //        String[] popularMovieArray = { //poster paths
 //                "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg",
@@ -80,22 +87,19 @@ public class MainMovieFragment extends Fragment {
 //        );
 
         mMovieAdapter = new MoviePosterAdapter(getActivity(), new ArrayList<Movie>());
-
-        GridView moviePosterGrid = (GridView) rootView.findViewById(R.id.movie_poster_gridview);
         moviePosterGrid.setAdapter(mMovieAdapter);
-
         return rootView;
     }
 
-    public class FetchMoviesTask extends AsyncTask<String,Void,List<Movie>> {
+    public class FetchMoviesTask extends AsyncTask<String,Void,ArrayList<Movie>> {
 
         private final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
 
-        private List<Movie> getMoviesDataFromJson(String jsonStr) throws JSONException {
+        private ArrayList<Movie> getMoviesDataFromJson(String jsonStr) throws JSONException {
             JSONObject movieJson = new JSONObject(jsonStr);
             JSONArray movieArray = movieJson.getJSONArray("results");
 
-            List<Movie> results = new ArrayList<>();
+            ArrayList<Movie> results = new ArrayList<>();
 
             for(int i = 0; i < movieArray.length(); i++) {
                 JSONObject movie = movieArray.getJSONObject(i);
@@ -111,7 +115,7 @@ public class MainMovieFragment extends Fragment {
         }
 
         @Override
-        protected List<Movie> doInBackground(String... params) {
+        protected ArrayList<Movie> doInBackground(String... params) {
 
             if (params.length == 0) {
                 return null;
@@ -178,7 +182,7 @@ public class MainMovieFragment extends Fragment {
 
             // if we got movieJsonStr successfully, try parsing out data
             try {
-                ArrayList<Movie> movieList = (ArrayList<Movie>) getMoviesDataFromJson(movieJsonStr);
+                ArrayList<Movie> movieList = getMoviesDataFromJson(movieJsonStr);
                 return movieList; // returns an ArrayList of Movies
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
@@ -189,13 +193,16 @@ public class MainMovieFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(List<Movie> movies) {
+        protected void onPostExecute(ArrayList<Movie> movies) {
             if (movies != null) {
                 if (mMovieAdapter != null) {
-                    mMovieAdapter.setData(movies); // I get a Runtime OutOfMemoryError here. why?
+                    //Log.v(LOG_TAG, "movies and mMovieAdapter is not null, so set it");
+                    mMovieAdapter.setData(movies);
                 }
-                mMovies = new ArrayList<>();
-                mMovies.addAll(movies);
+                mMoviesArrayList = new ArrayList<>();
+                mMoviesArrayList.addAll(movies);
+            } else {
+                Log.v(LOG_TAG, "Data set NOT changed");
             }
         }
     }

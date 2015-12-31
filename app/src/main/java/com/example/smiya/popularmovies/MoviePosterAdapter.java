@@ -10,7 +10,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by smiya on 12/6/15.
@@ -18,11 +18,11 @@ import java.util.List;
 public class MoviePosterAdapter extends BaseAdapter {
     private final String LOG_TAG = MoviePosterAdapter.class.getSimpleName();
 
-    private List<Movie> mMovies;
+    private ArrayList<Movie> mMovies;
     private final Context mContext;
     private final LayoutInflater mInflater;
 
-    public MoviePosterAdapter(Context context, List<Movie> movies) {
+    public MoviePosterAdapter(Context context, ArrayList<Movie> movies) {
         mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mMovies = movies;
@@ -45,6 +45,7 @@ public class MoviePosterAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        Log.v(LOG_TAG, "in Adapter getView");
 
         final Movie movie = getItem(position);
         String moviePosterPath;
@@ -77,14 +78,14 @@ public class MoviePosterAdapter extends BaseAdapter {
     }
 
     public void clear() {
-        this.clear();
+        mMovies.clear();
     }
 
     public void add(Movie movie) {
-        this.add(movie);
+        mMovies.add(movie);
     }
 
-    public void setData(List<Movie> data) {
+    public void setData(ArrayList<Movie> data) {
         clear();
         for (Movie movie : data) {
             add(movie);
