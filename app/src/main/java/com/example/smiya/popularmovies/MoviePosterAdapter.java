@@ -1,7 +1,6 @@
 package com.example.smiya.popularmovies;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +44,7 @@ public class MoviePosterAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Log.v(LOG_TAG, "in Adapter getView");
+//        Log.v(LOG_TAG, "in Adapter getView");
 
         final Movie movie = getItem(position);
         String moviePosterPath;
@@ -63,10 +62,10 @@ public class MoviePosterAdapter extends BaseAdapter {
 
         // add the build image to the holder
         moviePosterPath = movie.getPosterPath();
-        final String POSTER_BASE_URL = "http://image/tmdb.org/t/p/";
+        final String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
         final String POSTER_WIDTH = "w185";
         final String FULL_POSTER_URL = POSTER_BASE_URL + POSTER_WIDTH + moviePosterPath;
-        Log.v(LOG_TAG, "Full Poster Url: " + FULL_POSTER_URL);
+//        Log.v(LOG_TAG, "Full Poster Url: " + FULL_POSTER_URL);
 
         Picasso.with(mContext).load(FULL_POSTER_URL).into(holder.image);
 
